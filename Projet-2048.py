@@ -132,14 +132,51 @@ def bouger_gauche(LISTE):
     renverser chaque sous-liste est équivalent à a faire un déplacement vers la gauche"""
 
     #print(LISTE)
-    bouger_droite(LISTE)
+    #bouger_droite(LISTE)
     for i in range(len(LISTE)):
         LISTE[i].reverse()
+        if i == len(LISTE)-1:
+            bouger_droite(LISTE)
+            LISTE.reverse()
     #print("modifié : ", LISTE)
     #canvas.after(20)
+    """affichage_plateau()
+    affichage_valeurs(LISTE)"""
+    return LISTE
+
+def ajout_tuile(LISTE):
+    print("avant modif liste : ", LISTE)
+    a = randint(0, 100)
+    if a <= 90:     a = 2
+    else:           a = 4
+    liste_tampon = []
+    for i in range(4):
+        for j in range(4):
+            if LISTE[i][j] == 0:
+                liste_tampon += [[i, j]]
+    b = randint(0, len(liste_tampon))
+    print(liste_tampon[b])
+    LISTE[liste_tampon[b][0]][liste_tampon[b][1]] = a
+    print("apres modif liste : ", LISTE)
     affichage_plateau()
     affichage_valeurs(LISTE)
     return LISTE
+
+def move(event):
+    global LISTE
+    touche =event.keysym
+    if touche == "Right":
+        bouger_droite(LISTE)
+        ajout_tuile(LISTE)
+    if touche == "Left":
+        bouger_gauche(LISTE)
+        ajout_tuile(LISTE)
+    if touche == "Up":
+        bouger_haut(LISTE)
+        ajout_tuile(LISTE)
+    if touche == "Down":
+        bouger_bas(LISTE)
+        ajout_tuile(LISTE)
 
 """def gagner(LISTE): 
 
@@ -156,11 +193,13 @@ bouton.grid(column = 1, row = 3)
 canvas = tk.Canvas(racine, height = HAUTEUR, width = LARGEUR)
 canvas.grid(column = 1, row = 1)
 
-tableau = plateau_jeu()
+LISTE = plateau_jeu()
 affichage_plateau()
-affichage_valeurs(tableau)
+affichage_valeurs(LISTE)
 #print(bouger_haut(tableau))
 #canvas.bind("<Up>", bouger_haut(tableau))
-canvas.bind("<Up>", bouger_haut(tableau))
+#canvas.bind("<Up>", bouger_haut(tableau))
+
+racine.bind('<Key>',move)
 
 racine.mainloop()
