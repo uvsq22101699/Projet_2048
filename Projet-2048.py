@@ -66,6 +66,7 @@ def affichage_valeurs(liste):
     for a in range(len(liste)):
         for b in range(len(liste[a])):
             if liste[a][b] != 0:
+                #print(liste[a][b])
                 canvas.create_text(emplacement_x, emplacement_y, fill = "red", text = liste[a][b], font=("Purisa", 150//4))
             emplacement_x += hauteur_case
         emplacement_y += largeur_case
@@ -113,9 +114,12 @@ def bouger_droite(LISTE):
     for T in range(4):
         if LISTE[T] != [0, 0, 0, 0]:
             for i in range(3):
-                if (LISTE[T][i+1] == LISTE[T][i]) or (LISTE[T][i+1] == 0) :
+                if (LISTE[T][-1-i] == LISTE[T][-2-i]) or (LISTE[T][-1-i] == 0) :
+                    LISTE[T][-1-i] += LISTE[T][-2-i]
+                    LISTE[T][-2-i] = 0
+                """if (LISTE[T][i+1] == LISTE[T][i]) or (LISTE[T][i+1] == 0) :
                     LISTE[T][i+1] += LISTE[T][i]
-                    LISTE[T][i] = 0
+                    LISTE[T][i] = 0"""
     print("modifié : ", LISTE)
     #canvas.after(20)
     affichage_plateau()
@@ -126,15 +130,26 @@ def bouger_gauche(LISTE):
     """Le but de cette fonction est de permettre les déplacements vers la gauche, elle s'appuie sur la fonction bouger_droite car bouger vers la droite puis 
     renverser chaque sous-liste est équivalent à a faire un déplacement vers la gauche"""
 
-    for T in range(4):
-        if LISTE[T] != [0, 0, 0, 0]:
-            for i in range(3):
-                if (LISTE[T][3-i] == LISTE[T][2-i]):
-                    LISTE[T][2-i] += LISTE[T][3-i]
-                    LISTE[T][3-i] = 0
-    affichage_plateau()
-    affichage_valeurs(LISTE)
+    for i in range(2):
+        rotation_90(LISTE)
+    bouger_droite(LISTE)
+    for i in range(2):
+        rotation_90(LISTE)
+
+
+def rotation_90(LISTE):
+
+    C = []
+    for i in range(4):
+        l = []
+        for j in range(4):
+            l.append(LISTE[j][i])
+        l.reverse()
+        C.append(l)
+    LISTE = C
     return LISTE
+
+
 
 def ajout_tuile(LISTE):
     """Cette fonction permet de rajouter une tuile une fois tous les déplacements effectués"""
@@ -221,11 +236,12 @@ canvas.grid(column = 1, row = 1)
 LISTE = plateau_jeu()
 affichage_plateau()
 affichage_valeurs(LISTE)
+print(rotation_90(LISTE))
 
 bouton = tk.Button(racine, text = "Sauvegarder", fg = "black", command = lambda : Save(LISTE), activebackground = "blue", borderwidth=2, bg = "green")
 bouton.grid(column = 0, row = 3)
 
-bouton = tk.Button(racine, text = "Charger", fg = "black", command = lambda : Charger(), activebackground = "blue", borderwidth=2, bg = "green")
+bouton = tk.Button(racine, text = "Charger", fg = "black", command = lambda : affichage_valeurs(Charger()), activebackground = "blue", borderwidth=2, bg = "green")
 bouton.grid(column = 3, row = 3)
 
 racine.bind('<Key>',move)
