@@ -7,6 +7,7 @@
 
 import tkinter as tk
 from random import *
+import ast
 #from functionNono import process_matrices
 
 racine = tk.Tk()
@@ -42,19 +43,40 @@ def plateau_jeu():
     PLATEAU[alea[0]][alea[1]] = b
     return PLATEAU
 
-
 def affichage_plateau():
     """Cette fonction permet de créer le jeu a proprement parlé, c'est la partie graphique du jeu"""
     largeur_case = LARGEUR // 4
     hauteur_case = HAUTEUR // 4
+    couleurs = ["#eee4da", "#ede0c8", "#f2b179", "#f59563", "#f67c5f", "#f65e3b", "#edcf72", "#edcc61", "#edc850", "#edc53f", "#edc22e"]
+    couleur = "gray"
+    canvas.delete()
     for i in range(4):
         for j in range(4):
-            if (i + j) % 2 == 0:
-                color = "yellow"
+            if liste[i][j] == 2:
+                couleur = couleurs[0]
+            elif liste[i][j] == 4:
+                couleur = couleurs[1]
+            elif liste[i][j] == 8:
+                couleur = couleurs[2]
+            elif liste[i][j] == 16:
+                couleur = couleurs[3]
+            elif liste[i][j] == 32:
+                couleur = couleurs[4]
+            elif liste[i][j] == 64:
+                couleur = couleurs[5]
+            elif liste[i][j] == 128:
+                couleur = couleurs[6]
+            elif liste[i][j] == 256:
+                couleur = couleurs[7]
+            elif liste[i][j] == 512:
+                couleur = couleurs[8]
+            elif liste[i][j] == 1024:
+                couleur = couleurs[9]
+            elif liste[i][j] == 2048:
+                couleur = couleurs[10]
             else:
-                color = "orange"
-            canvas.create_rectangle((i * largeur_case, j * hauteur_case),
-                                    ((i + 1) * largeur_case, (j + 1) * hauteur_case), fill=color)
+                couleur = "gray"
+            canvas.create_rectangle((j * largeur_case, i * hauteur_case), ((j + 1) * largeur_case, (i + 1) * hauteur_case), fill=couleur)
 
 
 def affichage_valeurs(liste):
@@ -68,70 +90,61 @@ def affichage_valeurs(liste):
         for b in range(len(liste[a])):
             if liste[a][b] != 0:
                 # print(liste[a][b])
-                canvas.create_text(emplacement_x, emplacement_y, fill="red", text=liste[a][b],
+                canvas.create_text(emplacement_x, emplacement_y, fill="black", text=liste[a][b],
                                    font=("Purisa", 150 // 4))
             emplacement_x += hauteur_case
         emplacement_y += largeur_case
         emplacement_x = hauteur_case // 2
 
 
-def separate_coordinate(coordinate_list):
-    " renvoie le résultat final, cela effectue un déplacement vers la droite"
-    list_coordinate = [[], [], [], []]
-    final_list = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-    for i in coordinate_list: list_coordinate[i[2]].append([i[0], i[1]])
-    coordinate_compressed = []
-    for i in list_coordinate: coordinate_compressed.append(coordinate_adder(i))
-    for i in range(4):
-        for number in coordinate_compressed[i]: final_list[i][number[1]] = number[0]
-    return final_list
-
-
-def coordinate_adder(coordinate):
+def coordinate_adder(liste_fusion):
     " récupere les valeur ainsi que leur position, et ressort les sommes de décalage vers la droite ligne par ligne"
-    final_coordinate = []
-    for coordinate_index in range(len(coordinate)):
-        if coordinate_index != len(coordinate)-1:
-            if coordinate[coordinate_index][0] == coordinate[coordinate_index + 1][0]:
-                if final_coordinate:
-                    if final_coordinate[-1][1] != coordinate_index: 
-                        temp = [coordinate[coordinate_index][0] + coordinate[coordinate_index + 1][0], coordinate[coordinate_index + 1][1]]
-                else: 
-                    temp = [coordinate[coordinate_index][0] + coordinate[coordinate_index + 1][0], coordinate[coordinate_index + 1][1]]
-            else: 
-                temp = [coordinate[coordinate_index][0], coordinate[coordinate_index][1]]
-        else: 
-            temp = [coordinate[coordinate_index][0], coordinate[coordinate_index][1]]
-        if temp: final_coordinate.append(temp)
-
-    # Cleaning Part
-    toClean = []
-    for coo in range(len(final_coordinate)):
-        if coo != len(final_coordinate)-1:
-            if final_coordinate[coo][1] == final_coordinate[coo+1][1]:
-                toClean.append(final_coordinate[coo+1])
-    for i in toClean:
-        final_coordinate.remove(i)
-
-    # Movement part
-    if final_coordinate:
-        if final_coordinate[-1][1] != 3: final_coordinate[-1][1] = 3
-        for coo in range(len(final_coordinate)):
-            if final_coordinate[-coo-1][1] != 3 and -coo != 0: final_coordinate[-coo - 1][1] = final_coordinate[-coo][1] - 1
-    return final_coordinate
-
-
-def get_coordinate(liste):
-    "Cette fonction renvoie une liste des cases ayant des valeurs avec leur coordonnées "
-    coordinate = []
-    for i in range(4):
-        for number in range(4):
-            if liste[i][number] != 0: coordinate.append([liste[i][number], number, i])
-    return coordinate
-
-
-def process_matrices(matrices):
-    return separate_coordinate(get_coordinate(matrices))
+    for i in range(len(liste_fusion)):
+        for j in range(len(liste_fusion[i])):
+            if liste_fusion[i][1] == 0 and liste_fusion[i][2] == 0 and liste_fusion[i][0] == liste_fusion[i][3]:
+                liste_fusion[i][0] += liste_fusion[i][3]
+                liste_fusion[i][3] = 0
+                break
+            if liste_fusion[i][1] == 0 and liste_fusion[i][0] == liste_fusion[i][2]:
+                liste_fusion[i][0] += liste_fusion[i][2]
+                liste_fusion[i][1] = liste_fusion[i][3]
+                liste_fusion[i][2] = 0
+                liste_fusion[i][3] = 0
+                break
+            if liste_fusion[i][2] == 0 and liste_fusion[i][0] == liste_fusion[i][1] == liste_fusion[i][3]:
+                liste_fusion[i][0] += liste_fusion[i][1]
+                liste_fusion[i][1] = liste_fusion[i][3]
+                liste_fusion[i][2] = 0
+                liste_fusion[i][3] = 0
+                break
+            if liste_fusion[i][1] == 0 and liste_fusion[i][0] == liste_fusion[i][2]:
+                liste_fusion[i][0] += liste_fusion[i][2]
+                liste_fusion[i][1] = liste_fusion[i][3]
+                liste_fusion[i][2] = 0
+                liste_fusion[i][3] = 0
+                break
+            if liste_fusion[i][2] == 0 and liste_fusion[i][1] == liste_fusion[i][3]:
+                liste_fusion[i][1] += liste_fusion[i][3]
+                liste_fusion[i][2] = 0
+                liste_fusion[i][3] = 0
+                if liste_fusion[i][0] == 0:
+                    liste_fusion[i][0] = liste_fusion[i][1]
+                    liste_fusion[i][1] = liste_fusion[i][2]
+                    liste_fusion[i][2] = 0
+                break
+            if j < 3:
+                if liste_fusion[i][j] == liste_fusion[i][j+1]:
+                    liste_fusion[i][j] += liste_fusion[i][j]
+                    liste_fusion[i][j+1] = 0
+            if j > 0 and liste_fusion[i][j-1] == 0:
+                liste_fusion[i][j-1] = liste_fusion[i][j]
+                liste_fusion[i][j] = 0
+                
+        for k in range(len(liste_fusion[i])):
+            if liste_fusion[i][k] == 0 and k < 3:
+                liste_fusion[i][k] = liste_fusion[i][k+1]
+                liste_fusion[i][k+1] = 0
+    return liste_fusion
 
 
 def rotation_90(matrices):
@@ -149,17 +162,26 @@ def rotation_90(matrices):
 
 def move_matrices(matrices, direction):
     global liste
+    a = []
+    for i in range(len(liste)):
+        a.append([])
+        for j in range(len(liste)):
+            a[i].append(liste[i][j])
     if direction == "Right":
-        liste = process_matrices(matrices)
+        liste = rotation_90(rotation_90(coordinate_adder(rotation_90(rotation_90(matrices)))))
     elif direction == "Left":
-        liste = rotation_90(rotation_90(process_matrices(rotation_90(rotation_90(matrices)))))
+        liste = coordinate_adder(matrices)
     elif direction == "Up":
-        liste = rotation_90(rotation_90(rotation_90(process_matrices(rotation_90(matrices)))))
+        liste = rotation_90(coordinate_adder(rotation_90(rotation_90(rotation_90(matrices)))))
     elif direction == "Down":
-        liste = rotation_90(process_matrices(rotation_90(rotation_90(rotation_90(matrices)))))
+        liste = rotation_90(rotation_90(rotation_90(coordinate_adder(rotation_90(matrices)))))
     affichage_plateau()
     affichage_valeurs(liste)
-    ajout_tuile(liste)
+    if a == rotation_90(rotation_90(coordinate_adder(rotation_90(rotation_90(matrices))))) and a == coordinate_adder(matrices) and a == rotation_90(coordinate_adder(rotation_90(rotation_90(rotation_90(matrices))))) and a == rotation_90(rotation_90(rotation_90(coordinate_adder(rotation_90(matrices))))):
+        canvas.create_text(300, 300, fill="black", text="Vous avez perdu", font=("Purisa", 50))
+    if a != liste:
+        ajout_tuile(liste)
+    label["text"] = "Score: " + str(score())
     gagner(liste)
     return liste
 
@@ -199,27 +221,28 @@ def Exit(liste):
 def Save(liste):
     """Cette fonction permet d'enregistrer le plateau de jeu dans un fichier texte"""
     a = liste
-    sauvegarde = open("2048_game.txt", "w+")
-    sauvegarde.write(str(a))
+    sauvegarde = open("2048_game.txt", "a")
+    sauvegarde.write(str(a) + "\n")
     sauvegarde.close()
 
 
 def Charger():
     """Cette fonction permet de charger une partie au format texte, (ne marche pas)"""
+    global liste
     sauvegarde = open("2048_game.txt", "r")
-    chargement = sauvegarde.read()
-    print(chargement)
-    LISTE = chargement
-    return LISTE
+    ligne = int(input("Entrez le numéro de la sauvegarde : "))
+    chargement = sauvegarde.readlines()
+    chargement = chargement[ligne]
+    chargement = ast.literal_eval(chargement)
+    liste = chargement
+    return liste
 
 
 def gagner(liste):
     for i in range(4):
         for j in range(4):
             if (liste[i][j] == 2048):
-                canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR)
-                canvas.grid(column=0, row=0, columnspan=5, rowspan=3)
-                canvas.create_text(300, 300, fill="black", text="Vous avez Gagnez", font=("Purisa", 50))
+                canvas.create_text(300, 300, fill="black", text="Vous avez gagné", font=("Purisa", 50))
 
 
 def move(event):
@@ -232,6 +255,14 @@ def move(event):
         Exit(liste)
 
 
+def score():
+    score = 0
+    for i in range(len(liste)):
+        for j in range(len(liste[i])):
+            score += liste[i][j]
+    return score
+
+
 bouton = tk.Button(racine, text="quitter", fg="black", command=racine.quit, activebackground="blue", borderwidth=2,
                    bg="green")
 bouton.grid(column=1, row=3)
@@ -240,6 +271,7 @@ canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR)
 canvas.grid(column=1, row=1)
 
 liste = plateau_jeu()
+# liste = [[4, 8, 2, 16], [2, 512, 32, 2], [4, 1024, 8, 16], [8, 16, 2, 2]]
 affichage_plateau()
 affichage_valeurs(liste)
 print(rotation_90(liste))
@@ -251,6 +283,9 @@ bouton.grid(column=0, row=3)
 bouton = tk.Button(racine, text="Charger", fg="black", command=lambda: affichage_valeurs(Charger()),
                    activebackground="blue", borderwidth=2, bg="green")
 bouton.grid(column=3, row=3)
+
+label = tk.Label(text="Score: " + str(score()))
+label.grid(column=0, row=1)
 
 racine.bind('<Key>', move)
 
