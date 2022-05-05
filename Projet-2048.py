@@ -8,7 +8,6 @@
 import tkinter as tk
 from random import *
 import ast
-#from functionNono import process_matrices
 
 racine = tk.Tk()
 racine.title("2048")
@@ -26,15 +25,10 @@ def plateau_jeu():
     """Cette fonction permet de créer le plateau de jeu et d'y insérer 2 valeurs, soit un 2 soit un 4. Sachant que le 2 a 9 fois plus de chance d'apparaitre que le 4 """
     PLATEAU = [[0 for x in range(4)] for z in range(4)]
     # print(PLATEAU)
-    if randint(0, 10) <= 9:
-        a = 2
-    else:
-        a = 4
-    if randint(0, 10) <= 9:
-        b = 2
-    else:
-        b = 4
-
+    if randint(0, 10) <= 9: a = 2
+    else: a = 4
+    if randint(0, 10) <= 9: b = 2
+    else: b = 4
     k = randint(0, 3)
     p = randint(0, 3)
     PLATEAU[k][p] = a
@@ -78,10 +72,8 @@ def affichage_plateau():
                 couleur = "gray"
             canvas.create_rectangle((j * largeur_case, i * hauteur_case), ((j + 1) * largeur_case, (i + 1) * hauteur_case), fill=couleur)
 
-
 def affichage_valeurs(liste):
-    """Cette fonction permet de faire apparaitre le chiffre sur le plateau"""
-
+    """Cette fonction permet de faire apparaitre le chiffre sur le plateau, UNIQUEMENT vers la gauche"""
     largeur_case = LARGEUR // 4
     hauteur_case = HAUTEUR // 4
     emplacement_x = largeur_case // 2
@@ -96,9 +88,8 @@ def affichage_valeurs(liste):
         emplacement_y += largeur_case
         emplacement_x = hauteur_case // 2
 
-
 def coordinate_adder(liste_fusion):
-    " récupere les valeur ainsi que leur position, et ressort les sommes de décalage vers la droite ligne par ligne"
+    " effectue tous les calculs pour les fusions et les décallages"
     for i in range(len(liste_fusion)):
         for j in range(len(liste_fusion[i])):
             if liste_fusion[i][1] == 0 and liste_fusion[i][2] == 0 and liste_fusion[i][0] == liste_fusion[i][3]:
@@ -146,7 +137,6 @@ def coordinate_adder(liste_fusion):
                 liste_fusion[i][k+1] = 0
     return liste_fusion
 
-
 def rotation_90(matrices):
     " permet d'effectuer une rotation de 90° vers la droite"
     C = []
@@ -159,8 +149,8 @@ def rotation_90(matrices):
     matrices = C
     return matrices
 
-
 def move_matrices(matrices, direction):
+    " permet d'effectuer des rotation et ainsi permettre aux 3 autres directions de fonctionner "
     global liste
     a = []
     for i in range(len(liste)):
@@ -185,7 +175,6 @@ def move_matrices(matrices, direction):
     gagner(liste)
     return liste
 
-
 def ajout_tuile(liste):
     """Cette fonction permet de rajouter une tuile une fois tous les déplacements effectués"""
     print("avant modif liste : ", liste)
@@ -206,25 +195,12 @@ def ajout_tuile(liste):
     affichage_valeurs(liste)
     return liste
 
-
-def Exit(liste):
-    a = 0
-    for i in range(4):
-        for j in range(4):
-            a += liste[i][j]
-    canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR)
-    canvas.grid(column=0, row=0, columnspan=5, rowspan=3)
-    canvas.create_text(200, 200, fill="black", text="votre score est : ", font=("Purisa", 50))
-    canvas.create_text(300, 300, fill="black", text=str(a), font=("Purisa", 50))
-
-
 def Save(liste):
     """Cette fonction permet d'enregistrer le plateau de jeu dans un fichier texte"""
     a = liste
     sauvegarde = open("2048_game.txt", "a")
     sauvegarde.write(str(a) + "\n")
     sauvegarde.close()
-
 
 def Charger():
     """Cette fonction permet de charger une partie au format texte, (ne marche pas)"""
@@ -237,13 +213,11 @@ def Charger():
     liste = chargement
     return liste
 
-
 def gagner(liste):
     for i in range(4):
         for j in range(4):
             if (liste[i][j] == 2048):
                 canvas.create_text(300, 300, fill="black", text="Vous avez gagné", font=("Purisa", 50))
-
 
 def move(event):
     global liste
@@ -251,17 +225,14 @@ def move(event):
     possibleButton = ["Right", "Left", "Up", "Down"]
     if touche in possibleButton:
         move_matrices(liste, touche)
-    if touche == "Escape":
-        Exit(liste)
-
 
 def score():
+    " permet d'afficher le score en directe "
     score = 0
     for i in range(len(liste)):
         for j in range(len(liste[i])):
             score += liste[i][j]
     return score
-
 
 bouton = tk.Button(racine, text="quitter", fg="black", command=racine.quit, activebackground="blue", borderwidth=2,
                    bg="green")
@@ -271,10 +242,8 @@ canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR)
 canvas.grid(column=1, row=1)
 
 liste = plateau_jeu()
-# liste = [[4, 8, 2, 16], [2, 512, 32, 2], [4, 1024, 8, 16], [8, 16, 2, 2]]
 affichage_plateau()
 affichage_valeurs(liste)
-print(rotation_90(liste))
 
 bouton = tk.Button(racine, text="Sauvegarder", fg="black", command=lambda: Save(liste), activebackground="blue",
                    borderwidth=2, bg="green")
@@ -290,4 +259,3 @@ label.grid(column=0, row=1)
 racine.bind('<Key>', move)
 
 racine.mainloop()
-
