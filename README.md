@@ -7,3 +7,8 @@ Nous comencerons par la partie de calcul des mouvement des tuiles qui s'afficher
 15/04/22 : L'ensemble des fonctions ont été écrites, il faut désormais résoudre les bugs du programme, direction gauche, chargement d'une partie, et quelque bugs mineurs
 
 05/05/22 : Le programme est fonctionel hormis les fonction de sauvegarde et de chargement des parties qui refusent de fonctioner sur mon Mac, cela semblerai fonctioner sur un ordinateur sous windows.
+
+
+Une fois le programme lancé vous pouvez jouer en utilisant les fleches 4 directionnnelles : ↓, →, ←, ou encore ↑.
+Si 2 cases ayant les memes valeurs se rencontrent elles fusionneront en s'additionant.
+Il y a un systeme de sauvegarde mais il semble avoir un probleme sur les Mac, sur des ordinateurs sous Windows la sauvegarde de la partie en cours sous forme de fichier .txt ainsi que le chargement d'une partie sous formet de fichier .txt semble fonctionner correctement. 
