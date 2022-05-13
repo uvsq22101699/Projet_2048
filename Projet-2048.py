@@ -17,7 +17,6 @@ racine.title("2048")
 HAUTEUR = 600
 LARGEUR = 600
 
-
 #################################
 # Fonctions
 
@@ -73,7 +72,7 @@ def affichage_plateau():
             canvas.create_rectangle((j * largeur_case, i * hauteur_case), ((j + 1) * largeur_case, (i + 1) * hauteur_case), fill=couleur)
 
 def affichage_valeurs(liste):
-    """Cette fonction permet de faire apparaitre le chiffre sur le plateau, UNIQUEMENT vers la gauche"""
+    """Cette fonction permet de faire apparaitre le chiffre sur le plateau"""
     largeur_case = LARGEUR // 4
     hauteur_case = HAUTEUR // 4
     emplacement_x = largeur_case // 2
@@ -89,7 +88,7 @@ def affichage_valeurs(liste):
         emplacement_x = hauteur_case // 2
 
 def coordinate_adder(liste_fusion):
-    " effectue tous les calculs pour les fusions et les décallages"
+    " effectue tous les calculs pour les fusions et les décallages, UNIQUEMENT vers la gauche"
     for i in range(len(liste_fusion)):
         for j in range(len(liste_fusion[i])):
             if liste_fusion[i][1] == 0 and liste_fusion[i][2] == 0 and liste_fusion[i][0] == liste_fusion[i][3]:
@@ -209,8 +208,10 @@ def Charger():
     ligne = int(input("Entrez le numéro de la sauvegarde : "))
     chargement = sauvegarde.readlines()
     chargement = chargement[ligne]
-    chargement = ast.literal_eval(chargement)
+    chargement = ast.literal_eval(chargement) #permet de convertir des string en liste de liste d'entier 
     liste = chargement
+    affichage_plateau()
+    affichage_valeurs(liste)
     return liste
 
 def gagner(liste):
