@@ -1,4 +1,6 @@
 # Projet_2048
+#Noah BERTRAND 
+#22101699
 
 Dans ce projet nous devons créer une interface qui permettera de jouer au 2048 comme nous pourrions y jouer sur : https://www.game-2048.com/fr/ .
 
@@ -8,4 +10,6 @@ Nous comencerons par la partie de calcul des mouvement des tuiles qui s'afficher
 
 Une fois le programme lancé vous pouvez jouer en utilisant les fleches 4 directionnnelles : ↓, →, ←, ou encore ↑.
 Si 2 cases ayant les memes valeurs se rencontrent elles fusionneront en s'additionant.
-Il y a un systeme de sauvegarde mais il semble avoir un probleme sur les Mac, sur des ordinateurs sous Windows la sauvegarde de la partie en cours sous forme de fichier .txt ainsi que le chargement d'une partie sous formet de fichier .txt semble fonctionner correctement. 
+Le probleme de sauvegarde et de chargement sur Mac a été corrigé, cela devait être due a un bug son mon propre Mac.
+
+09/05/22 : Le jeu 2048 est complétement fonctionnel, je n'ai pas eu le temps de faire les bonus car j'ai fais le jeu seul.
